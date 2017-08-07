@@ -23,6 +23,17 @@ set(BCLTYPE_SOURCES
     variant.cpp
 )
 
+# oleaut is used for decimal arithmethics on windows, except 64bit where our implementation is faster
+if(CLR_CMAKE_TARGET_ARCH_AMD64 OR NOT DEFINED WIN32)
+    list(APPEND BCLTYPE_SOURCES
+     decimal_calc.cpp)
+endif(CLR_CMAKE_TARGET_ARCH_AMD64 OR NOT DEFINED WIN32)
+
+if(CLR_CMAKE_TARGET_ARCH_AMD64 AND WIN32)
+    list(APPEND BCLTYPE_SOURCES
+     udiv128.S)
+endif(CLR_CMAKE_TARGET_ARCH_AMD64 AND WIN32)
+
 if(CLR_CMAKE_PLATFORM_UNIX)
     add_compile_options(-fPIC)
 endif(CLR_CMAKE_PLATFORM_UNIX)
